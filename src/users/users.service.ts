@@ -12,13 +12,6 @@ export class UsersService {
   constructor(@InjectRepository(User) private usersRepo: Repository<User>) {}
 
   async create(email: string, password: string) {
-    const alreadyExist = await this.find(email);
-
-    if (alreadyExist.length) {
-      throw new ConflictException(
-        'User with the provided email already exists.',
-      );
-    }
 
     const user = this.usersRepo.create({ email, password });
 
