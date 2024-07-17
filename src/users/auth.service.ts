@@ -1,5 +1,9 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { randomBytes, scrypt as _scrypt } from 'crypto';
+import { promisify } from 'util';
+
+const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class AuthService {
@@ -16,10 +20,19 @@ export class AuthService {
     }
 
     // Hash the users password
+    // Generate the salt
+    const salt = randomBytes(8).toString('hex');
+
+    // Hash and password together
+    const hash = (await scrypt(password, salt, 32)) as Buffer;
+
+    // Joined the hash result and salt together
+    const hashPassword = `${salt}.${hash.toString('hex')}`;
 
     // Create a new user and save it
+    const user = this.usersService.create(email, hashPassword);
 
-    // return the user
+    return user;
   }
 
   signIn(email: string, password: string) {}
