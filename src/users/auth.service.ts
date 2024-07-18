@@ -41,7 +41,7 @@ export class AuthService {
   }
 
   async signIn(email: string, password: string) {
-    const [user] = this.usersService.find(email);
+    const [user] = await this.usersService.find(email);
 
     if (!user) {
       throw new NotFoundException('user not found');
@@ -50,7 +50,7 @@ export class AuthService {
     const [salt, storedHash] = user.password.split('.');
     const hash = (await scrypt(password, salt, 32)) as Buffer;
 
-    if (hash !== storedHash.toString('hex')) {
+    if (hash.toString('hex') !== storedHash) {
       throw new BadRequestException('bad password');
     }
 
