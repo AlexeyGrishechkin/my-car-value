@@ -26,7 +26,12 @@ export class UsersController {
 
   @Post('/signup')
   createUser(@Body() { email, password }: CreateUserDto) {
-    return this.authService.signUp(email, password)
+    return this.authService.signUp(email, password);
+  }
+
+  @Post('/signin')
+  signIn(@Body() { email, password }: CreateUserDto) {
+    return this.authService.signIn(email, password);
   }
 
   @Get('/:id')
@@ -40,14 +45,8 @@ export class UsersController {
   }
 
   @Get()
-  async findAllUsers(@Query('email') email: string) {
-    const user = await this.userService.find(email);
-
-    if (!user) {
-      throw new NotFoundException('user not found');
-    }
-
-    return user;
+  findAllUsers(@Query('email') email: string) {
+    return this.userService.find(email);
   }
 
   @Patch('/:id')
