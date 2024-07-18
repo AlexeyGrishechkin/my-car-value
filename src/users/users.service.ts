@@ -12,13 +12,16 @@ export class UsersService {
   constructor(@InjectRepository(User) private usersRepo: Repository<User>) {}
 
   async create(email: string, password: string) {
-
     const user = this.usersRepo.create({ email, password });
 
     return this.usersRepo.save(user);
   }
 
   findById(id: number) {
+    if (!id) {
+      return null;
+    }
+
     return this.usersRepo.findOneBy({ id });
   }
 
