@@ -19,8 +19,6 @@ export class User {
   password: string;
 
   @AfterInsert()
-  @AfterRemove()
-  @AfterUpdate()
   logInsert() {
     console.log('Inserted User with id', this.id);
   }
