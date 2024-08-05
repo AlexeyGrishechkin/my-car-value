@@ -77,7 +77,17 @@ describe('AuthService', () => {
   });
 
   test('throws if signin is called with an unused email', async () => {
-    await expect(service.signIn('5bYpB@example.com', 'asdf')).rejects.toThrow(
+    fakeUsersService.find = () => {
+      return Promise.resolve([
+        {
+          id: 1,
+          email: '5bYpB@example.com',
+          password: 'asdf',
+        } as User,
+      ]);
+    };
+
+    await expect(service.signIn('unused@example.com', 'asdf')).rejects.toThrow(
       NotFoundException,
     );
   });
